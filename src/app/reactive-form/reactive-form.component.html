@@ -1,0 +1,88 @@
+<form [formGroup]="profileForm" novalidate class="form" xmlns="http://www.w3.org/1999/html">
+  <mat-form-field appearance="fill" class="input-control">
+    <mat-label for="firstName">First Name:</mat-label>
+    <input matInput name="firstName" id="firstName" formControlName="firstName">
+    <mat-error *ngIf="profileForm.controls['firstName'].invalid && profileForm.controls['firstName'].touched">
+      Не указано имя
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="input-control">
+    <mat-label>Second Name:</mat-label>
+    <input matInput name="secondName" formControlName="secondName">
+    <mat-error *ngIf="profileForm.controls['secondName'].invalid && profileForm.controls['secondName'].touched">
+      Не указана фамиия
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="input-control">
+    <mat-label>Choose a date</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="userBirthday">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="input-control">
+    <mat-label for="technology">Выберите JS технологию</mat-label>
+    <mat-select id="technology" required formControlName="technologySelect">
+      <mat-option *ngFor="let f of technology" [value]="f.value">{{f.title}}</mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="profileForm.controls['technologySelect'].invalid && profileForm.controls['technologySelect'].touched">
+      Выберите JS технологию
+    </mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field *ngIf="profileForm.controls['technologySelect'].valid" appearance="fill" class="input-control">
+    <mat-label for="version">Выбирете версию</mat-label>
+    <mat-select disabled id="version" formControlName="versionTechnology">
+      <mat-option *ngFor="let version of listOfTechnology" [value]="version">{{version}}</mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="profileForm.controls['versionTechnology'].invalid && profileForm.controls['versionTechnology'].touched">
+      Выберите версию технологии
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="input-control">
+    <mat-label>Введиет Email</mat-label>
+    <input matInput type="email" name="email" formControlName="userEmail">
+  </mat-form-field>
+  <div class="errors">
+    <mat-error *ngIf="profileForm.controls['userEmail'].invalid && profileForm.controls['userEmail'].touched">
+      Не верный Email
+    </mat-error>
+    <mat-error>
+      {{profileForm.get('userEmail').getError('invalidEmail')}}
+    </mat-error>
+  </div>
+
+  <div formArrayName="hobby">
+    Укажите Ваши хобби
+    <div *ngFor="let hobbies of hobby.controls; let i = index">
+      <table>
+        <tr>
+          <td>
+            <mat-form-field appearance="fill">
+              <mat-label for="name">Введите название хобби</mat-label>
+              <input matInput id="name" name="name" [formControl]="hobbies.controls['name']">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="fill">
+              <mat-label>Введите длительность</mat-label>
+              <input matInput type="number" placeholder="month" name="duration"
+                     [formControl]="hobbies.controls['duration']">
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <button mat-raised-button color="accent" (click)="addHobby()" class="button">Add hobby</button>
+  </div>
+  <div>
+    <button mat-raised-button color="primary" (click)="submit()" [disabled]="profileForm.invalid" class="button">Submit</button>
+  </div>
+
+</form>
